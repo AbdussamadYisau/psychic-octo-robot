@@ -23,12 +23,16 @@ Users should be able to:
 
 ### Screenshot
 
-![](./screenshot.jpg)
+![Desktop View](<img width="1440" alt="Screenshot 2023-01-20 at 16 55 03" src="https://user-images.githubusercontent.com/45614149/213745344-b687fcbb-850c-47d8-9bad-ebc201071933.png">
+)
+
+![Mobile View](https://user-images.githubusercontent.com/45614149/213745462-8ce6589a-78a5-42d8-9292-f879657b399d.png)
+
 
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://abdussamadyisau.github.io/psychic-octo-robot/product-preview/)
+- Solution URL: [here](https://abdussamadyisau.github.io/psychic-octo-robot/product-preview/)
 
 ## Author
 
