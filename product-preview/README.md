@@ -23,8 +23,8 @@ Users should be able to:
 
 ### Screenshot
 
-![Desktop View](<img width="1440" alt="Screenshot 2023-01-20 at 16 55 03" src="https://user-images.githubusercontent.com/45614149/213745344-b687fcbb-850c-47d8-9bad-ebc201071933.png">
-)
+![Desktop View](https://user-images.githubusercontent.com/45614149/213745976-66a1acad-a618-43a3-bde2-7c56267b3472.png)
+
 
 ![Mobile View](https://user-images.githubusercontent.com/45614149/213745462-8ce6589a-78a5-42d8-9292-f879657b399d.png)
 
