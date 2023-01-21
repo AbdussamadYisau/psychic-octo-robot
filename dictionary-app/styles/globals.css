@@ -1,0 +1,27 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  /* Your default theme */
+  --background: white;
+  --foreground: black;
+}
+
+.dark {
+  --background: #050505;
+  --foreground: white;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+
+body {
+  /* margin: 0 auto; */
+  max-width: 1440px;
+}
