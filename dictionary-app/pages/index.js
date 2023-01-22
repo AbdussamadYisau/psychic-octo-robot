@@ -62,9 +62,6 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    console.log("Is", isFocused);
-  }, [isFocused])
 
   if (!mounted) {
     return null;
@@ -131,9 +128,9 @@ export default function Home() {
                 }
 
                }}
-               onMouseLeave={
+
+              onMouseMove= {
                 () =>  { 
-                  setIsFocused(false);
                   if (inputValue === '') {
                     setHasError(true);
                   } else {
@@ -141,6 +138,7 @@ export default function Home() {
                   }
                }
               }
+
               onChange={(e) => setInputValue(e.target.value) }
             />
             <button type="submit">
@@ -158,7 +156,7 @@ export default function Home() {
               </svg>
             </button>
           </form>
-          {hasError && !isFocused && <p className="font-[400] text-[#FF5252] text-[16px] not-italic mt-2">Whoops, can't be empty</p>}
+          {hasError && isFocused === false && <p className="font-[400] text-[#FF5252] text-[16px] not-italic mt-2">Whoops, can't be empty</p>}
       </div>
     </>
   );
