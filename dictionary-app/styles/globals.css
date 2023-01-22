@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 62.5%;
+}
 
 :root {
   /* Your default theme */
@@ -18,10 +21,55 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 
 body {
-  /* margin: 0 auto; */
+  margin: 0 auto;
   max-width: 1440px;
+  -webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+
+
+select {
+  appearance: none;
+  background-image: url("../public/dropdown.svg"); /* Add your own arrow */
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: 10px;
+  background-color: transparent;
+  width: fit-content;
+  outline: none;
+  cursor: pointer;
+}
+
+.toggle__checkbox {
+  width: 0;
+}
+
+.toggle {
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  border-radius: 2.4rem;
+  position: relative;
+  cursor: pointer;
+}
+
+.toggle::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  clip-path: circle(50% at 50% 50%);
+  background-color: white;
+  position: absolute;
+  top: 0;
+  left: 0rem;
+  transition: all .2s;
+}
+
+.toggle__checkbox:checked+.toggle::before {
+  transform: translateX(20px);
 }
