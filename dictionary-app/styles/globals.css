@@ -35,10 +35,6 @@ body {
 
 select {
   appearance: none;
-  background-image: url("../public/dropdown.svg"); /* Add your own arrow */
-  background-repeat: no-repeat;
-  background-position: right;
-  background-size: 10px;
   background-color: transparent;
   width: fit-content;
   outline: none;
@@ -72,4 +68,41 @@ select {
 
 .toggle__checkbox:checked+.toggle::before {
   transform: translateX(20px);
+}
+
+
+form {
+  display: flex;
+  align-items: center;
+  width: 736px;
+  height: 40px;
+  border-radius: 16px;
+  padding: 20px 24px;
+}
+
+
+
+
+input[type="text"] {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 8px;
+  margin-right: 0.5rem;
+  flex-grow: 1;
+  background-color: transparent;
+  outline: none;
+  font-weight: bold;
+}
+
+button[type="submit"] {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  stroke: "#A445ED";
 }

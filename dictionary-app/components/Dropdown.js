@@ -1,6 +1,6 @@
 import React from "react";
 
-const Logo = ({
+const Dropdown = ({
     stroke, fill
 }) => {
   return (
@@ -11,4 +11,4 @@ const Logo = ({
   );
 };
 
-export default Logo;
+export default Dropdown;
