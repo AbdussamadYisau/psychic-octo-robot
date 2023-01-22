@@ -158,7 +158,7 @@ export default function Home() {
               </svg>
             </button>
           </form>
-          {hasError && <p className="font-[400] text-[#FF5252] text-[20px] not-italic mt-2">Whoops,can't be empty</p>}
+          {hasError && !isFocused && <p className="font-[400] text-[#FF5252] text-[16px] not-italic mt-2">Whoops, can't be empty</p>}
       </div>
     </>
   );
