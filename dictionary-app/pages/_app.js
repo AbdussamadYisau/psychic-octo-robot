@@ -17,13 +17,13 @@ import { useState } from 'react';
 
 export default function App({ Component, pageProps }) {
    // Create a client
- const [queryClient] = useState(() => new QueryClient());
+ const queryClient =  new QueryClient();
 
   return(
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
       <ThemeProvider enableSystem={false} attribute="class">
-     <Component {...pageProps} />
+        <Component {...pageProps} />
      </ThemeProvider>
     </QueryClientProvider>
     )

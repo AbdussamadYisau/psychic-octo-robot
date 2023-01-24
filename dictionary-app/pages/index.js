@@ -6,14 +6,10 @@ import Logo from "../components/Logo";
 import Moon from "../components/Moon";
 import Dropdown from "../components/Dropdown";
 import { Inter, Lora, Inconsolata } from "@next/font/google";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import axiosInstance from "../services/apiConfig";
+import axios from "axios";
 
-const getWord = async (word) => {
-  const res = await axiosInstance.get(`/${word}`);
-  console.log("word", res.data);
-  return res.data;
-};
 
 const inter = Inter({
   subsets: ["latin"],
@@ -71,10 +67,32 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  const query = useQuery( submitted? getWord : null);
+   // Access the client
+   const queryClient = useQueryClient();
+
+  const [word, setWord] = useState('');
+
+  const { status, data, error } = useQuery(
+    ['dictionary', word],
+    async () => {
+      const response = await axios.get(
+        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+      );
+      return response.data;
+    },
+    {
+      enabled: word !== '',
+      onError: (error) => console.log(error),
+    }
+  );
 
   if (!mounted) {
     return null;
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setWord(event.target.elements.word.value);
   }
 
   return (
@@ -101,11 +119,11 @@ export default function Home() {
                 type="checkbox"
                 name="checkbox"
                 id="checkbox"
-                class="toggle__checkbox"
+                className="toggle__checkbox"
               />
               <label
-                for="checkbox"
-                class="toggle"
+                htmlFor="checkbox"
+                className="toggle"
                 style={{
                   backgroundColor: theme === "light" ? "#757575" : "#A445ED",
                 }}
@@ -128,13 +146,7 @@ export default function Home() {
               : ""
           } `}
           method="get"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setSubmitted(true);
-            if (inputValue !== "") {
-              getWord(inputValue);
-            }
-          }}
+          onSubmit={handleSubmit}
         >
           <input
             type="text"
@@ -143,22 +155,24 @@ export default function Home() {
             onFocus={() => setIsFocused(true)}
             onBlur={() => {
               setIsFocused(false);
-              if (inputValue === "") {
+              if (word === "") {
                 setHasError(true);
               } else {
                 setHasError(false);
               }
             }}
             onMouseMove={() => {
-              if (inputValue === "") {
+              if (word === "") {
                 setHasError(true);
               } else {
                 setHasError(false);
               }
             }}
-            onChange={(e) => setInputValue(e.target.value)}
+            name="word"
           />
-          <button type="submit">
+          <button 
+          type="submit"
+          >
             <svg
               width="18"
               height="18"
@@ -178,6 +192,19 @@ export default function Home() {
             Whoops, can't be empty
           </p>
         )}
+
+{status === 'loading' && <div>Loading...</div>}
+      {status === 'error' && <div>Error: {error.message}</div>}
+      {status === 'success' && (
+        <div>
+          <h2>Definition of {word}:</h2>
+          <p>{data[0].meanings[0].definitions[0].definition}</p>
+        </div>
+      )}
+
+        <div>
+
+        </div>
       </div>
     </>
   );
