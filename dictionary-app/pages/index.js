@@ -10,7 +10,6 @@ import { useQuery, useQueryClient } from "react-query";
 import axiosInstance from "../services/apiConfig";
 import axios from "axios";
 
-
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -67,13 +66,13 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-   // Access the client
-   const queryClient = useQueryClient();
+  // Access the client
+  const queryClient = useQueryClient();
 
-  const [word, setWord] = useState('');
+  const [word, setWord] = useState("");
 
-  const { status, data, error } = useQuery(
-    ['dictionary', word],
+  const { status, data, error, isFetching } = useQuery(
+    ["dictionary", word],
     async () => {
       const response = await axios.get(
         `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
@@ -81,10 +80,14 @@ export default function Home() {
       return response.data;
     },
     {
-      enabled: word !== '',
+      enabled: word !== "",
       onError: (error) => console.log(error),
     }
   );
+
+  useEffect(() => {
+    console.log("Status", status)
+  }, [status])
 
   if (!mounted) {
     return null;
@@ -93,7 +96,7 @@ export default function Home() {
   const handleSubmit = (event) => {
     event.preventDefault();
     setWord(event.target.elements.word.value);
-  }
+  };
 
   return (
     <>
@@ -170,9 +173,7 @@ export default function Home() {
             }}
             name="word"
           />
-          <button 
-          type="submit"
-          >
+          <button type="submit">
             <svg
               width="18"
               height="18"
@@ -193,18 +194,23 @@ export default function Home() {
           </p>
         )}
 
-{status === 'loading' && <div>Loading...</div>}
-      {status === 'error' && <div>Error: {error.message}</div>}
-      {status === 'success' && (
-        <div>
-          <h2>Definition of {word}:</h2>
-          <p>{data[0].meanings[0].definitions[0].definition}</p>
-        </div>
-      )}
+        {status === "loading" && (
+          
+          <div className="centerText mt-[24px]">
+            <div className="loading loadingSpinner1"></div>
+            <div className="loading loadingSpinner2"></div>
+            <div className="loading loadingSpinner3"></div>
+          </div>
+      
+        )}
+        {status === "error" && <div>Error: {error.message}</div>}
+        {status === "success" && (
+          <div>
+            <h2>Definition of {word}:</h2>
+            <p>{data[0].meanings[0].definitions[0].definition}</p>
+          </div>
+        )}
 
-        <div>
-
-        </div>
       </div>
     </>
   );
