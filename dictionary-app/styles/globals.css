@@ -74,7 +74,7 @@ select {
 form {
   display: flex;
   align-items: center;
-  width: 736px;
+  /* width: ; */
   height: 40px;
   border-radius: 16px;
   padding: 20px 24px;
@@ -92,7 +92,7 @@ input[type="text"] {
   background-color: transparent;
   outline: none;
   font-weight: bold;
-}
+} 
 
 button[type="submit"] {
   background: none;

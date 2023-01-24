@@ -9,12 +9,16 @@ import {
 } from 'react-query'
 import { ReactQueryDevtools } from "react-query/devtools";
 import { ThemeProvider } from 'next-themes'
+import { useState } from 'react';
 
- // Create a client
- const queryClient = new QueryClient()
+
+
 
 
 export default function App({ Component, pageProps }) {
+   // Create a client
+ const [queryClient] = useState(() => new QueryClient());
+
   return(
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
