@@ -5,10 +5,10 @@ import { useState, useEffect } from "react";
 import Logo from "../components/Logo";
 import Moon from "../components/Moon";
 import Dropdown from "../components/Dropdown";
-import { Inter, Lora, Inconsolata } from "@next/font/google";
+import { Inter, Lora, Inconsolata, Oswald } from "@next/font/google";
 import { useQuery, useQueryClient } from "react-query";
-import axiosInstance from "../services/apiConfig";
 import axios from "axios";
+import PlayAudio from "../components/PlayIcon";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,8 +25,17 @@ const inconsolata = Inconsolata({
   variable: "--font-inconsolata",
 });
 
+const aboreto = Oswald({
+  subsets: ["latin"],
+  variable: "--font-oswald",
+});
+
 const FontPicker = () => {
-  const [selectedFont, setSelectedFont] = useState(inter.variable);
+  const [selectedFont, setSelectedFont] = useState("Arial");
+
+  useEffect(() => {
+    document.body.style.fontFamily = selectedFont;
+  }, [selectedFont]);
 
   const handleFontChange = (e) => {
     setSelectedFont(e.target.value);
@@ -39,25 +48,28 @@ const FontPicker = () => {
         onChange={handleFontChange}
         className="font-bold text-lg"
       >
-        <option value={inter.variable}>Inter</option>
-        <option value={lora.variable}>Lora</option>
-        <option value={inconsolata.variable}>Inconsolata</option>
+        {/* <option value={inter.className}>Inter</option>
+        <option value={lora.className}>Lora</option>
+        <option value={inconsolata.className}>Inconsolata</option> */}
+
+        <option value="Arial">Arial</option>
+        <option value="Inter">Inter</option>
+        <option value="Sans-Serif">Sans-Serif</option>
+        <option value="Monospace">Monospace</option>
       </select>
-      <style jsx global>{`
+      {/* <style jsx global>{`
         body,
         * {
           font-family: ${selectedFont};
         }
-      `}</style>
+      `}</style> */}
     </div>
   );
 };
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  const [inputValue, setInputValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
   const { theme, setTheme } = useTheme();
 
@@ -67,27 +79,33 @@ export default function Home() {
   }, []);
 
   // Access the client
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const [word, setWord] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
-  const { status, data, error, isFetching } = useQuery(
+  const { status, data, error } = useQuery(
     ["dictionary", word],
     async () => {
       const response = await axios.get(
         `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
       );
+
       return response.data;
     },
     {
-      enabled: word !== "",
+      enabled: word !== "" && submitted !== false,
       onError: (error) => console.log(error),
     }
   );
 
+  const [audio, setAudio] = useState(null);
   useEffect(() => {
-    console.log("Status", status)
-  }, [status])
+    if (data) {
+      const newData = data[0].phonetics.filter((word) => word.audio !== "");
+      setAudio(new Audio(`${newData[0].audio}`));
+    }
+  }, [data]);
 
   if (!mounted) {
     return null;
@@ -95,7 +113,9 @@ export default function Home() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setSubmitted(true);
     setWord(event.target.elements.word.value);
+    setTimeout(() => setSubmitted(false), 3000);
   };
 
   return (
@@ -122,11 +142,11 @@ export default function Home() {
                 type="checkbox"
                 name="checkbox"
                 id="checkbox"
-                className="toggle__checkbox"
+                className={`toggle__checkbox ${theme==="light" ? "":"check"}`}
               />
               <label
                 htmlFor="checkbox"
-                className="toggle"
+                className={`toggle `}
                 style={{
                   backgroundColor: theme === "light" ? "#757575" : "#A445ED",
                 }}
@@ -195,22 +215,27 @@ export default function Home() {
         )}
 
         {status === "loading" && (
-          
           <div className="centerText mt-[24px]">
             <div className="loading loadingSpinner1"></div>
             <div className="loading loadingSpinner2"></div>
             <div className="loading loadingSpinner3"></div>
           </div>
-      
         )}
         {status === "error" && <div>Error: {error.message}</div>}
         {status === "success" && (
-          <div>
-            <h2>Definition of {word}:</h2>
-            <p>{data[0].meanings[0].definitions[0].definition}</p>
-          </div>
-        )}
+        <div className={`${styles.meatOfPage}`}>
+          <div className={`${styles.wordPhoneticsPlay}`}>
+            <div>
+              <p className={`${styles.word}`}>Keyboard</p>
+              <p className={`${styles.phonetics}`}>/ki-board/</p>
+            </div>
 
+            {data[0].phonetics.filter((word) => word.audio !== "")[0] ? (
+              <PlayAudio onClick={() => audio.play()} />
+            ) : null}
+          </div>
+        </div>
+         )} 
       </div>
     </>
   );

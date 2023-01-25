@@ -3,3 +3,28 @@
     margin-top: 16px;
 }
 
+
+.meatOfPage {
+    margin-top: 45px;
+    box-sizing: border-box;
+}
+
+.wordPhoneticsPlay {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.wordPhoneticsPlay div .word {
+    font-weight: 700;
+    font-size: 54px;
+    line-height: 1.23;
+}
+
+.phonetics {
+    font-weight: 400;
+font-size: 24px;
+line-height: 29px;
+
+color: #A445ED;
+}
