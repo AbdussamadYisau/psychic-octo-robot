@@ -306,6 +306,26 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+            <div className={`${styles.groupSections}`}>
+
+              <div className={`bg-[#E9E9E9] dark:bg-[#3A3A3A] ${styles.finalDivider}`}>
+      
+                </div>
+
+              <div className={`${styles.whereFrom}`}>
+
+                <p>Source</p>
+                <a
+                href={data[0].sourceUrls}
+                target="_blank"
+                >
+                {data[0].sourceUrls}
+                </a>
+
+              </div>
+
+            </div>
           </div>
         )}
       </div>
