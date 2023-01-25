@@ -1,6 +1,6 @@
 import React from "react";
 
-const PlayAudio = ({onClick}) => {
+const PlayAudio = ({onClick, className}) => {
   return (
     <svg
       width="75"
@@ -9,6 +9,7 @@ const PlayAudio = ({onClick}) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       onClick={onClick}
+      className={className}
     >
       <circle opacity="0.25" cx="37.5" cy="37.5" r="37.5" fill="#A445ED" />
       <path

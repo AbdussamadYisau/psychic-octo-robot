@@ -100,10 +100,26 @@ export default function Home() {
   );
 
   const [audio, setAudio] = useState(null);
+  let groups = {};
+
   useEffect(() => {
     if (data) {
+      // Get Audio if available
       const newData = data[0].phonetics.filter((word) => word.audio !== "");
       setAudio(new Audio(`${newData[0].audio}`));
+
+      // Separate meanings by part of speech
+      data[0].meanings.forEach(function (item) {
+        var list = groups[item.partOfSpeech];
+
+        if (list) {
+          list.push(item);
+        } else {
+          groups[item.partOfSpeech] = [item];
+        }
+      });
+
+      console.log("Groups", groups);
     }
   }, [data]);
 
@@ -142,7 +158,9 @@ export default function Home() {
                 type="checkbox"
                 name="checkbox"
                 id="checkbox"
-                className={`toggle__checkbox ${theme==="light" ? "":"check"}`}
+                className={`toggle__checkbox ${
+                  theme === "light" ? "" : "check"
+                }`}
               />
               <label
                 htmlFor="checkbox"
@@ -223,19 +241,52 @@ export default function Home() {
         )}
         {status === "error" && <div>Error: {error.message}</div>}
         {status === "success" && (
-        <div className={`${styles.meatOfPage}`}>
-          <div className={`${styles.wordPhoneticsPlay}`}>
-            <div>
-              <p className={`${styles.word}`}>Keyboard</p>
-              <p className={`${styles.phonetics}`}>/ki-board/</p>
+          <div className={`${styles.meatOfPage}`}>
+            <div className={`${styles.wordPhoneticsPlay}`}>
+              <div>
+                <p className={`${styles.word} text-[#2D2D2D] dark:text-white`}>
+                  {data[0].word}
+                </p>
+                <p className={`${styles.phonetics}`}>
+                  {
+                    data[0].phonetics.filter(
+                      (word) => word.text !== ("" || undefined)
+                    )[0].text
+                  }
+                </p>
+              </div>
+
+              {data[0].phonetics.filter((word) => word.audio !== "")[0] ? (
+                <PlayAudio
+                  onClick={() => audio.play()}
+                  className="cursor-pointer"
+                />
+              ) : null}
             </div>
 
-            {data[0].phonetics.filter((word) => word.audio !== "")[0] ? (
-              <PlayAudio onClick={() => audio.play()} />
-            ) : null}
+
+            <div className={`${styles.groupSections}`}>
+              <div className={`${styles.partOfSpeechHeader}`}>
+                <p
+                  className={`text-[#2D2D2D] dark:text-white text-[24px] font-bold italic`}
+                >
+                  noun
+                </p>
+                <div className={`bg-[#E9E9E9] dark:bg-[#3A3A3A]`}></div>
+              </div>
+
+              <div className={`${styles.partOfSpeechBody}`}>
+                <p className={`${styles.partOfSpeechMeaning}`}>Meaning</p>
+                <div className={`${styles.partsOfSpeechList}`}>
+                  <ul>
+                    <li className={` text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}>A component of many instruments including the piano, organ, and harpsichord consisting of usually black and white keys that cause different tones to be produced when struck.</li>
+                    <li className={` text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}>(etc.) A set of keys used to operate a typewriter, computer etc.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-         )} 
+        )}
       </div>
     </>
   );

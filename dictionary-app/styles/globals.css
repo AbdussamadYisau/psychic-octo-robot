@@ -144,3 +144,28 @@ button[type="submit"] {
       transform: translateY(0);
   }
 }
+
+li {
+  /* Default bullets style erased */
+  list-style: none;
+  margin-top: 13px;
+}
+
+li:first-child {
+  margin-top: 0;
+}
+
+li::before {
+
+  /* Unicode for a bullet */
+  content: "\2022";
+    
+  /* Styles for Indentation*/
+  color: #A445ED;
+    
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+
