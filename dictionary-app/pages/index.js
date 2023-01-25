@@ -285,6 +285,27 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+            <div className={`${styles.groupSections}`}>
+              <div className={`${styles.partOfSpeechHeader}`}>
+                <p
+                  className={`text-[#2D2D2D] dark:text-white text-[24px] font-bold italic`}
+                >
+                  verbs
+                </p>
+                <div className={`bg-[#E9E9E9] dark:bg-[#3A3A3A]`}></div>
+              </div>
+
+              <div className={`${styles.partOfSpeechBody}`}>
+                <p className={`${styles.partOfSpeechMeaning}`}>Meaning</p>
+                <div className={`${styles.partsOfSpeechList}`}>
+                  <ul>
+                    <li className={` text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}>A component of many instruments including the piano, organ, and harpsichord consisting of usually black and white keys that cause different tones to be produced when struck.</li>
+                    <li className={` text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}>(etc.) A set of keys used to operate a typewriter, computer etc.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

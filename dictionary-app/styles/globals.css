@@ -7,6 +7,7 @@ html {
   font-size: 62.5%;
 }
 
+
 :root {
   /* Your default theme */
   --background: white;
@@ -27,9 +28,21 @@ html {
 
 body {
   margin: 0 auto;
+  padding: 20px 0;
   max-width: 1440px;
   -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+body {
+-ms-overflow-style: none;  /* IE and Edge */
+scrollbar-width: none;  /* Firefox */
 }
 
 
