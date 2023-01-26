@@ -11,7 +11,6 @@ import axios from "axios";
 import PlayAudio from "../components/PlayIcon";
 import ExternalLink from "../components/ExternalLink";
 
-
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -80,9 +79,6 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  // Access the client
-  // const queryClient = useQueryClient();
-
   const [word, setWord] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
@@ -103,6 +99,8 @@ export default function Home() {
 
   const [audio, setAudio] = useState(null);
   let groups = {};
+  const [groupsObject, setGroupsObject] = useState({});
+  const [groupObjectSynonyms, setGroupObjectSynonyms] = useState({});
 
   useEffect(() => {
     if (data) {
@@ -121,9 +119,24 @@ export default function Home() {
         }
       });
 
-      console.log("Groups", groups);
+      setGroupsObject(groups);
+
+      const newObject = {};
+
+      Object.keys(groups).forEach((partOfSpeech) => {
+        const synonyms = groups[partOfSpeech]
+          .map((item) => item.synonyms.join(", "))
+          .join(", ");
+        newObject[partOfSpeech] = synonyms;
+      });
+
+      setGroupObjectSynonyms(newObject);
     }
   }, [data]);
+
+  useEffect(() => {
+    console.log("Groups", groupObjectSynonyms);
+  }, [word]);
 
   if (!mounted) {
     return null;
@@ -133,7 +146,7 @@ export default function Home() {
     event.preventDefault();
     setSubmitted(true);
     setWord(event.target.elements.word.value);
-    if(word !== '') {
+    if (word !== "") {
       setHasError(false);
     }
     setTimeout(() => setSubmitted(false), 3000);
@@ -233,7 +246,8 @@ export default function Home() {
         </form>
         {hasError && isFocused === false && (
           <p className="font-[400] text-[#FF5252] text-[16px] not-italic mt-2">
-            Whoops, can't be empty. If not empty, press enter or click on submit button
+            Whoops, can't be empty. If not empty, press enter or click on submit
+            button
           </p>
         )}
 
@@ -269,74 +283,83 @@ export default function Home() {
               ) : null}
             </div>
 
+            <div>
+              {Object.keys(groupsObject).map((partOfSpeech) => (
+                <div className={`${styles.groupSections}`}>
+                  <div className={`${styles.partOfSpeechHeader}`}>
+                    <p
+                      className={`text-[#2D2D2D] dark:text-white text-[24px] font-bold italic`}
+                    >
+                      {partOfSpeech}
+                    </p>
+                    <div className={`bg-[#E9E9E9] dark:bg-[#3A3A3A]`}></div>
+                  </div>
 
-            <div className={`${styles.groupSections}`}>
-              <div className={`${styles.partOfSpeechHeader}`}>
-                <p
-                  className={`text-[#2D2D2D] dark:text-white text-[24px] font-bold italic`}
-                >
-                  noun
-                </p>
-                <div className={`bg-[#E9E9E9] dark:bg-[#3A3A3A]`}></div>
-              </div>
+                  {groupsObject[partOfSpeech].map((word, index) => (
+                    <div className={`${styles.partOfSpeechBody}`} key={index}>
+                      <p className={`${styles.partOfSpeechMeaning}`}>Meaning</p>
+                      <div className={`${styles.partsOfSpeechList}`}>
+                        <ul>
+                          {word.definitions
+                            .slice(0, 3)
+                            .map((definition, index) => (
+                              <li
+                                key={index}
+                                className={` text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}
+                              >
+                                {definition.definition}
+                              </li>
+                            ))}
+                        </ul>
+                      </div>
 
-              <div className={`${styles.partOfSpeechBody}`}>
-                <p className={`${styles.partOfSpeechMeaning}`}>Meaning</p>
-                <div className={`${styles.partsOfSpeechList}`}>
-                  <ul>
-                    <li className={` text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}>A component of many instruments including the piano, organ, and harpsichord consisting of usually black and white keys that cause different tones to be produced when struck.</li>
-                    <li className={` text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}>(etc.) A set of keys used to operate a typewriter, computer etc.</li>
-                  </ul>
+                      {groupsObject[partOfSpeech]
+                        .map((item) => item.synonyms.join(", "))
+                        .join(", ") && (
+                        <div className="flex gap-[20px] items-center">
+                          <p className={`font-[400] text-[#757575] text-[20px]`}>
+                            Synonyms{" "}
+                            
+                          </p>
+
+                          <p className={`font-[400] text-[#A445ED] text-[20px]`}>
+                              {" "}
+                              {groupsObject[partOfSpeech]
+                                .map((item) => item.synonyms.join(", "))
+                                .join(", ")}{" "}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              </div>
+              ))}
             </div>
 
             <div className={`${styles.groupSections}`}>
-              <div className={`${styles.partOfSpeechHeader}`}>
-                <p
-                  className={`text-[#2D2D2D] dark:text-white text-[24px] font-bold italic`}
-                >
-                  verbs
-                </p>
-                <div className={`bg-[#E9E9E9] dark:bg-[#3A3A3A]`}></div>
-              </div>
-
-              <div className={`${styles.partOfSpeechBody}`}>
-                <p className={`${styles.partOfSpeechMeaning}`}>Meaning</p>
-                <div className={`${styles.partsOfSpeechList}`}>
-                  <ul>
-                    <li className={` text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}>A component of many instruments including the piano, organ, and harpsichord consisting of usually black and white keys that cause different tones to be produced when struck.</li>
-                    <li className={` text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}>(etc.) A set of keys used to operate a typewriter, computer etc.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div className={`${styles.groupSections}`}>
-
-              <div className={`bg-[#E9E9E9] dark:bg-[#3A3A3A] ${styles.finalDivider}`}>
-      
-                </div>
+              <div
+                className={`bg-[#E9E9E9] dark:bg-[#3A3A3A] ${styles.finalDivider}`}
+              ></div>
 
               <div className={`${styles.whereFrom}`}>
-
-                <p className={`text-[14px] text-[#757575] font-[400] underline underline-offset-[4px] decoration-[#E9E9E9] dark:decoration-[#3A3A3A]`}>Source</p>
+                <p
+                  className={`text-[14px] text-[#757575] font-[400] underline underline-offset-[4px] decoration-[#E9E9E9] dark:decoration-[#3A3A3A]`}
+                >
+                  Source
+                </p>
 
                 <div className={`${styles.externalLinkDiv}`}>
-                <a
-                href={data[0].sourceUrls}
-                target="_blank"
-                className={`text-[14px] text-[#2D2D2D] dark:text-white font-[400] underline underline-offset-[4px] decoration-[#E9E9E9] dark:decoration-[#3A3A3A]`}
-                >
-                {data[0].sourceUrls}
-                </a>
+                  <a
+                    href={data[0].sourceUrls}
+                    target="_blank"
+                    className={`text-[14px] text-[#2D2D2D] dark:text-white font-[400] underline underline-offset-[4px] decoration-[#E9E9E9] dark:decoration-[#3A3A3A]`}
+                  >
+                    {data[0].sourceUrls}
+                  </a>
 
-                <ExternalLink />
-
+                  <ExternalLink />
                 </div>
-
               </div>
-
             </div>
           </div>
         )}
