@@ -145,6 +145,9 @@ export default function Home() {
   const handleSubmit = (event) => {
     event.preventDefault();
     setSubmitted(true);
+    if(word === "") {
+      setHasError(true);
+    }
     setWord(event.target.elements.word.value);
     if (word !== "") {
       setHasError(false);
@@ -214,19 +217,10 @@ export default function Home() {
             onFocus={() => setIsFocused(true)}
             onBlur={() => {
               setIsFocused(false);
-              if (word === "") {
-                setHasError(true);
-              } else {
-                setHasError(false);
-              }
             }}
-            onMouseMove={() => {
-              if (word === "") {
-                setHasError(true);
-              } else {
-                setHasError(false);
-              }
-            }}
+
+            onKeyDown={() => setHasError(false)}
+        
             name="word"
           />
           <button type="submit">
@@ -244,10 +238,9 @@ export default function Home() {
             </svg>
           </button>
         </form>
-        {hasError && isFocused === false && (
+        {hasError && (
           <p className="font-[400] text-[#FF5252] text-[16px] not-italic mt-2">
-            Whoops, can't be empty. If not empty, press enter or click on submit
-            button
+            Whoops, can't be empty...
           </p>
         )}
 
