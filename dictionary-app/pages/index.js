@@ -166,7 +166,7 @@ export default function Home() {
 
         <title>Dictionary App</title>
       </Head>
-      <div className="mx-[24px] lg:mx-[351px]">
+      <div className="mx-[24px] md:mx-[39px] lg:mx-[351px]">
         <div className={` ${styles.navbar} flex justify-between items-center`}>
           <Logo stroke={"#757575"} fill={"#757575"} />
 
@@ -215,7 +215,7 @@ export default function Home() {
           <input
             type="text"
             placeholder="Search for any word..."
-            className="text-[20px] text-[#2D2D2D] dark:text-white focus:bg-[transparent] min-w-[200px]"
+            className=" text-[16px] md:text-[20px] text-[#2D2D2D] dark:text-white focus:bg-[transparent] min-w-[200px]"
             onFocus={() => setIsFocused(true)}
             onBlur={() => {
               setIsFocused(false);
@@ -258,10 +258,10 @@ export default function Home() {
           <div className={`${styles.meatOfPage}`}>
             <div className={`${styles.wordPhoneticsPlay}`}>
               <div>
-                <p className={`text-[32px] lg:text-[54px] lg:font-[700] lg:leading-[1.23] text-[#2D2D2D] dark:text-white`}>
+                <p className={`text-[32px] md:text-[64px] md:font-[700] md:leading-[1.23] text-[#2D2D2D] dark:text-white`}>
                   {data[0].word}
                 </p>
-                <p className={`${styles.phonetics} text-[18px] lg:text-[24px]  leading-[1.33] font-[400]`}>
+                <p className={`${styles.phonetics} text-[18px] md:text-[24px]  leading-[1.33] font-[400]`}>
                   {
                     data[0].phonetics.filter(
                       (word) => word.text !== ("" || undefined)
@@ -283,7 +283,7 @@ export default function Home() {
                 <div className={`${styles.groupSections}`}>
                   <div className={`${styles.partOfSpeechHeader}`}>
                     <p
-                      className={`text-[#2D2D2D] dark:text-white  text-[32px] lg:text-[24px] font-bold italic`}
+                      className={`text-[#2D2D2D] dark:text-white  text-[32px] md:text-[24px] font-bold italic`}
                     >
                       {partOfSpeech}
                     </p>
@@ -292,7 +292,7 @@ export default function Home() {
 
                   {groupsObject[partOfSpeech].map((word, index) => (
                     <div className={`${styles.partOfSpeechBody}`} key={index}>
-                      <p className={`${styles.partOfSpeechMeaning} text-[18px] lg:text-[20px] font-[400]`}>Meaning</p>
+                      <p className={`${styles.partOfSpeechMeaning} text-[18px] md:text-[20px] font-[400]`}>Meaning</p>
                       <div className={`${styles.partsOfSpeechList}`}>
                         <ul>
                           {word.definitions
@@ -300,7 +300,7 @@ export default function Home() {
                             .map((definition, index) => (
                               <li
                                 key={index}
-                                className={` text-[15px] lg:text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}
+                                className={` text-[15px] md:text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}
                               >
                                 {definition.definition}
                               </li>
@@ -312,12 +312,12 @@ export default function Home() {
                         .map((item) => item.synonyms.join(", "))
                         .join(", ") && (
                         <div className="flex gap-[20px] items-center">
-                          <p className={`font-[400] text-[#757575] text-[16px] lg:text-[20px]`}>
+                          <p className={`font-[400] text-[#757575] text-[16px] md:text-[20px]`}>
                             Synonyms{" "}
                             
                           </p>
 
-                          <p className={`font-[400] text-[#A445ED] text-[16px] lg:text-[20px]`}>
+                          <p className={`font-[400] text-[#A445ED] text-[16px] md:text-[20px]`}>
                               {" "}
                               {groupsObject[partOfSpeech]
                                 .map((item) => item.synonyms.join(", "))
@@ -336,7 +336,7 @@ export default function Home() {
                 className={`bg-[#E9E9E9] dark:bg-[#3A3A3A] ${styles.finalDivider}`}
               ></div>
 
-              <div className={`${styles.whereFrom} flex flex-col gap-[8px] lg:flex-row lg:items-center lg:gap-[40px]`}>
+              <div className={`${styles.whereFrom} flex flex-col gap-[8px] md:flex-row md:items-center md:gap-[40px]`}>
                 <p
                   className={`text-[14px] text-[#757575] font-[400] underline underline-offset-[4px] decoration-[#E9E9E9] dark:decoration-[#3A3A3A]`}
                 >
