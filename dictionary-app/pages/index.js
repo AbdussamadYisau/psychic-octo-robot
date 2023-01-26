@@ -145,11 +145,13 @@ export default function Home() {
   const handleSubmit = (event) => {
     event.preventDefault();
     setSubmitted(true);
-    if(word === "") {
+   
+    setWord(event.target.elements.word.value);
+
+    if(event.target.elements.word.value === "") {
       setHasError(true);
     }
-    setWord(event.target.elements.word.value);
-    if (word !== "") {
+    if (event.target.elements.word.value !== "") {
       setHasError(false);
     }
     setTimeout(() => setSubmitted(false), 3000);
@@ -164,7 +166,7 @@ export default function Home() {
 
         <title>Dictionary App</title>
       </Head>
-      <div className="mx-[351px]">
+      <div className="mx-[24px] lg:mx-[351px]">
         <div className={` ${styles.navbar} flex justify-between items-center`}>
           <Logo stroke={"#757575"} fill={"#757575"} />
 
@@ -334,7 +336,7 @@ export default function Home() {
                 className={`bg-[#E9E9E9] dark:bg-[#3A3A3A] ${styles.finalDivider}`}
               ></div>
 
-              <div className={`${styles.whereFrom}`}>
+              <div className={`${styles.whereFrom} flex flex-col gap-[20px] lg:flex-row lg:items-center lg:gap-[40px]`}>
                 <p
                   className={`text-[14px] text-[#757575] font-[400] underline underline-offset-[4px] decoration-[#E9E9E9] dark:decoration-[#3A3A3A]`}
                 >
@@ -345,7 +347,7 @@ export default function Home() {
                   <a
                     href={data[0].sourceUrls}
                     target="_blank"
-                    className={`text-[14px] text-[#2D2D2D] dark:text-white font-[400] underline underline-offset-[4px] decoration-[#E9E9E9] dark:decoration-[#3A3A3A]`}
+                    className={`block text-[14px] text-[#2D2D2D] dark:text-white font-[400] underline underline-offset-[4px] decoration-[#E9E9E9] dark:decoration-[#3A3A3A]`}
                   >
                     {data[0].sourceUrls}
                   </a>
