@@ -106,7 +106,7 @@ export default function Home() {
     if (data) {
       // Get Audio if available
       const newData = data[0].phonetics.filter((word) => word.audio !== "");
-      setAudio(new Audio(`${newData[0].audio}`));
+      setAudio(new Audio(`${newData[0]?.audio}`));
 
       // Separate meanings by part of speech
       data[0].meanings.forEach(function (item) {
