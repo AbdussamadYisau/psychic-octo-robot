@@ -15,16 +15,8 @@
     align-items: center;
 }
 
-.wordPhoneticsPlay div .word {
-    font-weight: 700;
-    font-size: 54px;
-    line-height: 1.23;
-}
 
 .phonetics {
-    font-weight: 400;
-font-size: 24px;
-line-height: 29px;
 
 color: #A445ED;
 }
@@ -52,8 +44,6 @@ color: #A445ED;
 }
 
 .partOfSpeechMeaning {
-    font-size: 20px;
-    font-weight: 400;
     color: #757575;
 }
 
