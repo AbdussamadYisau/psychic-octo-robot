@@ -253,7 +253,17 @@ export default function Home() {
             <div className="loading loadingSpinner3"></div>
           </div>
         )}
-        {status === "error" && <div>Error: {error.message}</div>}
+        {status === "error" && 
+            <div className="mt-[8px] flex flex-col items-center">
+
+            <p className="text-[64px] font-[400] mb-[28px]">😕</p>
+  
+            <p className="font-[700] text-[20px] text-[#2D2D2D] dark:text-white ">No Definition Found</p>
+  
+            <p className="mt-[20px] text-[#757575] md:w-[450px] text-center">Sorry pal, we couldn't find definitions for the word you were looking for. You can try the search again at later time or head to the web instead.</p>
+  
+          </div>
+        }
         {status === "success" && (
           <div className={`${styles.meatOfPage}`}>
             <div className={`${styles.wordPhoneticsPlay}`}>
@@ -358,6 +368,8 @@ export default function Home() {
             </div>
           </div>
         )}
+
+    
       </div>
     </>
   );
