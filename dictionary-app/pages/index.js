@@ -9,6 +9,8 @@ import { Inter, Lora, Inconsolata, Oswald } from "@next/font/google";
 import { useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import PlayAudio from "../components/PlayIcon";
+import ExternalLink from "../components/ExternalLink";
+
 
 const inter = Inter({
   subsets: ["latin"],
@@ -131,6 +133,9 @@ export default function Home() {
     event.preventDefault();
     setSubmitted(true);
     setWord(event.target.elements.word.value);
+    if(word !== '') {
+      setHasError(false);
+    }
     setTimeout(() => setSubmitted(false), 3000);
   };
 
@@ -192,7 +197,7 @@ export default function Home() {
           <input
             type="text"
             placeholder="Search for any word..."
-            className="text-[20px] text-[#2D2D2D] dark:text-white"
+            className="text-[20px] text-[#2D2D2D] dark:text-white focus:bg-[transparent]"
             onFocus={() => setIsFocused(true)}
             onBlur={() => {
               setIsFocused(false);
@@ -228,7 +233,7 @@ export default function Home() {
         </form>
         {hasError && isFocused === false && (
           <p className="font-[400] text-[#FF5252] text-[16px] not-italic mt-2">
-            Whoops, can't be empty
+            Whoops, can't be empty. If not empty, press enter or click on submit button
           </p>
         )}
 
@@ -315,13 +320,20 @@ export default function Home() {
 
               <div className={`${styles.whereFrom}`}>
 
-                <p>Source</p>
+                <p className={`text-[14px] text-[#757575] font-[400] underline underline-offset-[4px] decoration-[#E9E9E9] dark:decoration-[#3A3A3A]`}>Source</p>
+
+                <div className={`${styles.externalLinkDiv}`}>
                 <a
                 href={data[0].sourceUrls}
                 target="_blank"
+                className={`text-[14px] text-[#2D2D2D] dark:text-white font-[400] underline underline-offset-[4px] decoration-[#E9E9E9] dark:decoration-[#3A3A3A]`}
                 >
                 {data[0].sourceUrls}
                 </a>
+
+                <ExternalLink />
+
+                </div>
 
               </div>
 

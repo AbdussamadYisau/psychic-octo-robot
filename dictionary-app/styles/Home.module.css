@@ -64,10 +64,16 @@ color: #A445ED;
 .whereFrom {
     margin-top: 20px;
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 40px;
 }
 
 .whereFrom a {
     cursor: pointer;
+}
+
+.externalLinkDiv {
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
