@@ -1,38 +1,16 @@
 import Head from "next/head";
 import { useTheme } from "next-themes";
 import styles from "../styles/Home.module.css";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Logo from "../components/Logo";
 import Moon from "../components/Moon";
-import Dropdown from "../components/Dropdown";
-import { Inter, Lora, Inconsolata, Oswald } from "@next/font/google";
 import { useQuery } from "react-query";
 import axios from "axios";
 import PlayAudio from "../components/PlayIcon";
 import ExternalLink from "../components/ExternalLink";
 import { useRouter } from "next/router";
 import { Listbox, Transition } from "@headlessui/react";
-import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const lora = Lora({
-  subsets: ["latin"],
-  variable: "--font-lora",
-});
-
-const inconsolata = Inconsolata({
-  subsets: ["latin"],
-  variable: "--font-inconsolata",
-});
-
-const aboreto = Oswald({
-  subsets: ["latin"],
-  variable: "--font-oswald",
-});
 
 const FontPicker = () => {
  
@@ -47,28 +25,11 @@ const FontPicker = () => {
   const [selectedFont, setSelectedFont] = useState(temp);
 
   useEffect(() => {
-    console.log("Selected", selectedFont);
     document.body.style.fontFamily = selectedFont.value;
   }, [selectedFont]);
  
 
   return (
-    // <div className="select">
-    //   <select
-    //     value={selectedFont}
-    //     onChange={handleFontChange}
-    //     className="font-bold text-lg"
-    //   >
-    //     {/* <option value={inter.className}>Inter</option>
-    //     <option value={lora.className}>Lora</option>
-    //     <option value={inconsolata.className}>Inconsolata</option> */}
-
-    //     <option value="Arial">Arial</option>
-    //     <option value="Inter">Inter</option>
-    //     <option value="Sans-Serif">Sans-Serif</option>
-    //     <option value="Monospace">Monospace</option>
-    //   </select>
-    // </div>
 
     <div> 
       <Listbox value={selectedFont.id} onChange={(value) => {
@@ -147,6 +108,9 @@ export default function Home() {
   const [word, setWord] = useState("");
 
   const [submitted, setSubmitted] = useState(false);
+
+  // hover for play button
+  const [hover, setHover] = useState(false);
 
   const { status, data } = useQuery(
     ["dictionary", word],
@@ -352,7 +316,12 @@ export default function Home() {
               {data[0].phonetics.filter((word) => word.audio !== "")[0] ? (
                 <PlayAudio
                   onClick={() => audio.play()}
-                  className="cursor-pointer rounded-full"
+                  hover={hover}
+                  onMouse
+                  onMouseEnter={() => setHover(true) }
+                  onMouseLeave={() => setHover(false)}
+                  
+                  className="cursor-pointer"
                 />
               ) : null}
             </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-const PlayAudio = ({ onClick, className }) => {
+const PlayAudio = ({ onClick, hover, onMouseEnter, onMouseLeave, className }) => {
   return (
     <svg
       width="75"
@@ -9,14 +9,16 @@ const PlayAudio = ({ onClick, className }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       className={className}
     >
-      <circle opacity="0.25" cx="37.5" cy="37.5" r="37.5" fill="#A445ED" />
+      <circle opacity={`${hover ? "1" : "0.25"}`} cx="37.5" cy="37.5" r="37.5" fill="#A445ED" />
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M29 27V48L50 37.5L29 27Z"
-        fill="#A445ED"
+        fill={`${hover ? "#FFF" : "#A445ED"}`}
       />
     </svg>
   );
