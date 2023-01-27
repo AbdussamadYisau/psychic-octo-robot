@@ -87,7 +87,6 @@ select {
 form {
   display: flex;
   align-items: center;
-  /* width: ; */
   height: 40px;
   border-radius: 16px;
   padding: 20px 24px;
@@ -182,3 +181,7 @@ li::before {
 }
 
 
+.rightSideDivider {
+  width: 1px;
+  height: 32px;
+}

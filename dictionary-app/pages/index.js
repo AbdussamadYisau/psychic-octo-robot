@@ -164,10 +164,14 @@ export default function Home() {
         <div className={` ${styles.navbar} flex justify-between items-center`}>
           <Logo stroke={"#757575"} fill={"#757575"} />
 
-          <div className="flex justify-between gap-[12px] items-center">
-            <div className="flex gap-[4px] items-center">
+          <div className="flex items-center">
+            <div className="flex gap-[4px] items-center mr-[26px]">
               <FontPicker />
               <Dropdown />
+            </div>
+
+            <div className="rightSideDivider bg-[#E9E9E9]">
+
             </div>
 
             <div className="flex gap-[20px] items-center">
