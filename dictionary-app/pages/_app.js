@@ -9,8 +9,6 @@ import {
 } from 'react-query'
 import { ReactQueryDevtools } from "react-query/devtools";
 import { ThemeProvider } from 'next-themes'
-import { useState } from 'react';
-
 
 
 

@@ -1,15 +1,18 @@
 import Head from "next/head";
 import { useTheme } from "next-themes";
 import styles from "../styles/Home.module.css";
-import { useState, useEffect } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Logo from "../components/Logo";
 import Moon from "../components/Moon";
 import Dropdown from "../components/Dropdown";
 import { Inter, Lora, Inconsolata, Oswald } from "@next/font/google";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import axios from "axios";
 import PlayAudio from "../components/PlayIcon";
 import ExternalLink from "../components/ExternalLink";
+import { useRouter } from "next/router";
+import { Listbox, Transition } from "@headlessui/react";
+import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,32 +35,99 @@ const aboreto = Oswald({
 });
 
 const FontPicker = () => {
-  const [selectedFont, setSelectedFont] = useState("Arial");
+ 
+  const people = [
+    {id: "1", name: "Sans-Serif", value: "Sans-Serif" },
+    {id: "2", name: "Monospace", value: "Monospace" },
+    {id: "3", name: "Cursive", value: "Cursive" },
+    
+  ];
+
+  const temp = people.find((ext) => ext.value);
+  const [selectedFont, setSelectedFont] = useState(temp);
 
   useEffect(() => {
-    document.body.style.fontFamily = selectedFont;
+    console.log("Selected", selectedFont);
+    document.body.style.fontFamily = selectedFont.value;
   }, [selectedFont]);
-
-  const handleFontChange = (e) => {
-    setSelectedFont(e.target.value);
-  };
+ 
 
   return (
-    <div className="select">
-      <select
-        value={selectedFont}
-        onChange={handleFontChange}
-        className="font-bold text-lg"
-      >
-        {/* <option value={inter.className}>Inter</option>
-        <option value={lora.className}>Lora</option>
-        <option value={inconsolata.className}>Inconsolata</option> */}
+    // <div className="select">
+    //   <select
+    //     value={selectedFont}
+    //     onChange={handleFontChange}
+    //     className="font-bold text-lg"
+    //   >
+    //     {/* <option value={inter.className}>Inter</option>
+    //     <option value={lora.className}>Lora</option>
+    //     <option value={inconsolata.className}>Inconsolata</option> */}
 
-        <option value="Arial">Arial</option>
-        <option value="Inter">Inter</option>
-        <option value="Sans-Serif">Sans-Serif</option>
-        <option value="Monospace">Monospace</option>
-      </select>
+    //     <option value="Arial">Arial</option>
+    //     <option value="Inter">Inter</option>
+    //     <option value="Sans-Serif">Sans-Serif</option>
+    //     <option value="Monospace">Monospace</option>
+    //   </select>
+    // </div>
+
+    <div> 
+      <Listbox value={selectedFont.id} onChange={(value) => {
+            setSelectedFont(people.find((ext) => ext.id === value));
+          }}>
+        <div className="relative mt-1">
+          <Listbox.Button className="relative w-full cursor-pointer rounded-lg  py-2 pl-3 pr-10 text-centershadow-md  text-[14px] md:text-[18px]">
+            <span className="block truncate mr-[20px] font-[700]">{selectedFont.name}</span>
+            <span className="pointer-events-none absolute inset-y-0  right-0 flex items-center pr-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-6 h-6"
+                stroke="#A445ED"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </span>
+          </Listbox.Button>
+          <Transition
+            as={Fragment}
+            leave="transition ease-in duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <Listbox.Options className="absolute mt-[8px] max-h-[400px] w-max overflow-auto rounded-[16px] bg-white dark:bg-[#1F1F1F] shadow-lg dark:shadow-[#A445ED]  pt-[24px]  text-[14px] md:text-[18px]">
+              {people.map((person, personIdx) => (
+                <Listbox.Option
+                  key={personIdx}
+                  className={({ active }) =>
+                    `relative cursor-pointer select-none pl-[24px] pr-[69px] mb-[16px] text-left ${
+                      active ? "text-[#A445ED]" : " text-[#2D2D2D] dark:text-white"
+                    }`
+                  }
+                  value={person.id}
+                >
+                  {({ selectedFont }) => (
+                    <>
+                      <span
+                        className={`block truncate ${
+                          selectedFont ? "font-medium text-[#A445ED]" : "font-normal"
+                        }`}
+                      >
+                        {person.name}
+                      </span>
+                  
+                    </>
+                  )}
+                </Listbox.Option>
+              ))}
+            </Listbox.Options>
+          </Transition>
+        </div>
+      </Listbox>
     </div>
   );
 };
@@ -65,6 +135,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const router = useRouter();
 
   const { theme, setTheme } = useTheme();
 
@@ -74,9 +145,10 @@ export default function Home() {
   }, []);
 
   const [word, setWord] = useState("");
+
   const [submitted, setSubmitted] = useState(false);
 
-  const { status, data, error } = useQuery(
+  const { status, data } = useQuery(
     ["dictionary", word],
     async () => {
       const response = await axios.get(
@@ -94,7 +166,6 @@ export default function Home() {
   const [audio, setAudio] = useState(null);
   let groups = {};
   const [groupsObject, setGroupsObject] = useState({});
-  const [groupObjectSynonyms, setGroupObjectSynonyms] = useState({});
 
   useEffect(() => {
     if (data) {
@@ -114,23 +185,8 @@ export default function Home() {
       });
 
       setGroupsObject(groups);
-
-      const newObject = {};
-
-      Object.keys(groups).forEach((partOfSpeech) => {
-        const synonyms = groups[partOfSpeech]
-          .map((item) => item.synonyms.join(", "))
-          .join(", ");
-        newObject[partOfSpeech] = synonyms;
-      });
-
-      setGroupObjectSynonyms(newObject);
     }
   }, [data]);
-
-  useEffect(() => {
-    console.log("Groups", groupObjectSynonyms);
-  }, [word]);
 
   if (!mounted) {
     return null;
@@ -139,10 +195,10 @@ export default function Home() {
   const handleSubmit = (event) => {
     event.preventDefault();
     setSubmitted(true);
-   
+
     setWord(event.target.elements.word.value);
 
-    if(event.target.elements.word.value === "") {
+    if (event.target.elements.word.value === "") {
       setHasError(true);
     }
     if (event.target.elements.word.value !== "") {
@@ -167,12 +223,9 @@ export default function Home() {
           <div className="flex items-center">
             <div className="flex gap-[4px] items-center mr-[26px]">
               <FontPicker />
-              <Dropdown />
             </div>
 
-            <div className="rightSideDivider bg-[#E9E9E9]">
-
-            </div>
+            <div className="rightSideDivider bg-[#E9E9E9]"></div>
 
             <div className="flex gap-[20px] items-center">
               <input
@@ -200,12 +253,12 @@ export default function Home() {
         </div>
 
         <form
-          className={`mt-[50px] search-container  bg-[#f4f4f4] dark:bg-[#1f1f1f] ${
+          className={`mt-[50px] search-container  bg-[#f4f4f4] dark:bg-[#1f1f1f] border border-solid  ${
             isFocused
-              ? "border border-solid border-[#A445ED]"
+              ? " border-[#A445ED]"
               : hasError
-              ? "border border-solid border-[#FF5252]"
-              : ""
+              ? " border-[#FF5252]"
+              : "border-[transparent]"
           } `}
           method="get"
           onSubmit={handleSubmit}
@@ -218,9 +271,7 @@ export default function Home() {
             onBlur={() => {
               setIsFocused(false);
             }}
-
             onKeyDown={() => setHasError(false)}
-        
             name="word"
           />
           <button type="submit">
@@ -246,12 +297,14 @@ export default function Home() {
 
         {status === "idle" && (
           <div className="mt-[60px] flex flex-col items-center">
+            <p className="font-[700] text-[20px] text-[#2D2D2D] dark:text-white ">
+              Hi there 🙋🏾‍♂️
+            </p>
 
-          <p className="font-[700] text-[20px] text-[#2D2D2D] dark:text-white ">Hi there 🙋🏾‍♂️</p>
-
-          <p className="mt-[20px] text-[#757575] md:w-[450px] text-center text-[16px]">This is where the results of your search would show up.</p>
-
-        </div>
+            <p className="mt-[20px] text-[#757575] md:w-[450px] text-center text-[16px]">
+              This is where the results of your search would show up.
+            </p>
+          </div>
         )}
 
         {status === "loading" && (
@@ -261,25 +314,33 @@ export default function Home() {
             <div className="loading loadingSpinner3"></div>
           </div>
         )}
-        {status === "error" && 
-            <div className="mt-[8px] flex flex-col items-center">
-
+        {status === "error" && (
+          <div className="mt-[8px] flex flex-col items-center">
             <p className="text-[64px] font-[400] mb-[28px]">😕</p>
-  
-            <p className="font-[700] text-[20px] text-[#2D2D2D] dark:text-white ">No Definition Found</p>
-  
-            <p className="mt-[20px] text-[#757575] md:w-[450px] text-center">Sorry pal, we couldn't find definitions for the word you were looking for. You can try the search again at later time or head to the web instead.</p>
-  
+
+            <p className="font-[700] text-[20px] text-[#2D2D2D] dark:text-white ">
+              No Definition Found
+            </p>
+
+            <p className="mt-[20px] text-[#757575] md:w-[450px] text-center">
+              Sorry pal, we couldn't find definitions for the word you were
+              looking for. You can try the search again at later time or head to
+              the web instead.
+            </p>
           </div>
-        }
+        )}
         {status === "success" && (
           <div className={`${styles.meatOfPage}`}>
             <div className={`${styles.wordPhoneticsPlay}`}>
               <div>
-                <p className={`text-[32px] md:text-[64px] md:font-[700] md:leading-[1.23] text-[#2D2D2D] dark:text-white`}>
+                <p
+                  className={`text-[32px] md:text-[64px] md:font-[700] md:leading-[1.23] text-[#2D2D2D] dark:text-white`}
+                >
                   {data[0].word}
                 </p>
-                <p className={`${styles.phonetics} text-[18px] md:text-[24px]  leading-[1.33] font-[400]`}>
+                <p
+                  className={`${styles.phonetics} text-[18px] md:text-[24px]  leading-[1.33] font-[400]`}
+                >
                   {
                     data[0].phonetics.filter(
                       (word) => word.text !== ("" || undefined)
@@ -291,7 +352,7 @@ export default function Home() {
               {data[0].phonetics.filter((word) => word.audio !== "")[0] ? (
                 <PlayAudio
                   onClick={() => audio.play()}
-                  className="cursor-pointer"
+                  className="cursor-pointer rounded-full"
                 />
               ) : null}
             </div>
@@ -310,28 +371,29 @@ export default function Home() {
 
                   {groupsObject[partOfSpeech].map((word, index) => (
                     <div className={`${styles.partOfSpeechBody}`} key={index}>
-                      <p className={`${styles.partOfSpeechMeaning} text-[18px] md:text-[20px] font-[400]`}>Meaning</p>
+                      <p
+                        className={`${styles.partOfSpeechMeaning} text-[18px] md:text-[20px] font-[400]`}
+                      >
+                        Meaning
+                      </p>
                       <div className={`${styles.partsOfSpeechList}`}>
                         <ul>
                           {word.definitions
                             .slice(0, 3)
                             .map((definition, index) => (
                               <>
-                              <li
-                                key={index}
-                                className={` text-[15px] md:text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}
-                              >
-                                {definition.definition}
-                              </li>
-                              {definition.example ? 
-                                <p className=" mt-[13px] text-[#757575] text-[15px] md:text-[18px] font-[400]">"{definition.example}"</p>
-                                :
-                                null
-                            }
-
+                                <li
+                                  key={index}
+                                  className={`definition-list text-[15px] md:text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}
+                                >
+                                  {definition.definition}
+                                </li>
+                                {definition.example ? (
+                                  <p className=" mt-[13px] text-[#757575] text-[15px] md:text-[18px] font-[400]">
+                                    "{definition.example}"
+                                  </p>
+                                ) : null}
                               </>
-                              
-                              
                             ))}
                         </ul>
                       </div>
@@ -340,16 +402,19 @@ export default function Home() {
                         .map((item) => item.synonyms.join(", "))
                         .join(", ") && (
                         <div className="flex gap-[20px] items-center">
-                          <p className={`font-[400] text-[#757575] text-[16px] md:text-[20px]`}>
+                          <p
+                            className={`font-[400] text-[#757575] text-[16px] md:text-[20px]`}
+                          >
                             Synonyms{" "}
-                            
                           </p>
 
-                          <p className={`font-[400] text-[#A445ED] text-[16px] md:text-[20px]`}>
-                              {" "}
-                              {groupsObject[partOfSpeech]
-                                .map((item) => item.synonyms.join(", "))
-                                .join(", ")}{" "}
+                          <p
+                            className={`font-[400] text-[#A445ED] text-[16px] md:text-[20px]`}
+                          >
+                            {" "}
+                            {groupsObject[partOfSpeech]
+                              .map((item) => item.synonyms.join(", "))
+                              .join(", ")}{" "}
                           </p>
                         </div>
                       )}
@@ -364,7 +429,9 @@ export default function Home() {
                 className={`bg-[#E9E9E9] dark:bg-[#3A3A3A] ${styles.finalDivider}`}
               ></div>
 
-              <div className={`${styles.whereFrom} flex flex-col gap-[8px] md:flex-row md:items-center md:gap-[40px]`}>
+              <div
+                className={`${styles.whereFrom} flex flex-col gap-[8px] md:flex-row md:items-center md:gap-[40px]`}
+              >
                 <p
                   className={`text-[14px] text-[#757575] font-[400] underline underline-offset-[4px] decoration-[#E9E9E9] dark:decoration-[#3A3A3A]`}
                 >
@@ -386,8 +453,6 @@ export default function Home() {
             </div>
           </div>
         )}
-
-    
       </div>
     </>
   );

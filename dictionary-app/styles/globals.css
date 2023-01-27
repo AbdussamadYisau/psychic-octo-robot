@@ -157,17 +157,17 @@ button[type="submit"] {
   }
 }
 
-li {
+.definition-list {
   /* Default bullets style erased */
   list-style: none;
   margin-top: 13px;
 }
 
-li:first-child {
+.definition-list:first-child {
   margin-top: 0;
 }
 
-li::before {
+.definition-list::before {
 
   /* Unicode for a bullet */
   content: "\2022";
