@@ -308,12 +308,22 @@ export default function Home() {
                           {word.definitions
                             .slice(0, 3)
                             .map((definition, index) => (
+                              <>
                               <li
                                 key={index}
                                 className={` text-[15px] md:text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}
                               >
                                 {definition.definition}
                               </li>
+                              {definition.example ? 
+                                <p className=" mt-[13px] text-[#757575] text-[18px] font-[400]">"{definition.example}"</p>
+                                :
+                                null
+                            }
+
+                              </>
+                              
+                              
                             ))}
                         </ul>
                       </div>
