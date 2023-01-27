@@ -316,7 +316,7 @@ export default function Home() {
                                 {definition.definition}
                               </li>
                               {definition.example ? 
-                                <p className=" mt-[13px] text-[#757575] text-[18px] font-[400]">"{definition.example}"</p>
+                                <p className=" mt-[13px] text-[#757575] text-[15px] md:text-[18px] font-[400]">"{definition.example}"</p>
                                 :
                                 null
                             }
