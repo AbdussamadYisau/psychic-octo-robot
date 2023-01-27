@@ -58,12 +58,6 @@ const FontPicker = () => {
         <option value="Sans-Serif">Sans-Serif</option>
         <option value="Monospace">Monospace</option>
       </select>
-      {/* <style jsx global>{`
-        body,
-        * {
-          font-family: ${selectedFont};
-        }
-      `}</style> */}
     </div>
   );
 };
@@ -244,6 +238,16 @@ export default function Home() {
           <p className="font-[400] text-[#FF5252] text-[16px] not-italic mt-2">
             Whoops, can't be empty...
           </p>
+        )}
+
+        {status === "idle" && (
+          <div className="mt-[60px] flex flex-col items-center">
+
+          <p className="font-[700] text-[20px] text-[#2D2D2D] dark:text-white ">Hi there 🙋🏾‍♂️</p>
+
+          <p className="mt-[20px] text-[#757575] md:w-[450px] text-center text-[16px]">This is where the results of your search would show up.</p>
+
+        </div>
         )}
 
         {status === "loading" && (
