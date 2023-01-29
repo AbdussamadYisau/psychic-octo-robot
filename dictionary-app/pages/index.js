@@ -300,7 +300,7 @@ export default function Home() {
                 <p
                   className={`text-[32px] md:text-[64px] md:font-[700] md:leading-[1.23] text-[#2D2D2D] dark:text-white`}
                 >
-                  {data[0].word}
+                  {data[0]?.word}
                 </p>
                 <p
                   className={`${styles.phonetics} text-[18px] md:text-[24px]  leading-[1.33] font-[400]`}
@@ -308,12 +308,13 @@ export default function Home() {
                   {
                     data[0].phonetics.filter(
                       (word) => word.text !== ("" || undefined)
-                    )[0].text
+                    )[0]?.text
+
                   }
                 </p>
               </div>
 
-              {data[0].phonetics.filter((word) => word.audio !== "")[0] ? (
+              {data[0].phonetics?.filter((word) => word.audio !== "")[0] ? (
                 <PlayAudio
                   onClick={() => audio.play()}
                   hover={hover}
@@ -347,7 +348,7 @@ export default function Home() {
                       </p>
                       <div className={`${styles.partsOfSpeechList}`}>
                         <ul>
-                          {word.definitions
+                          {word?.definitions
                             .slice(0, 3)
                             .map((definition, index) => (
                               <>
@@ -355,7 +356,7 @@ export default function Home() {
                                   key={index}
                                   className={`definition-list text-[15px] md:text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}
                                 >
-                                  {definition.definition}
+                                  {definition?.definition}
                                 </li>
                                 {definition.example ? (
                                   <p className=" mt-[13px] text-[#757575] text-[15px] md:text-[18px] font-[400]">
