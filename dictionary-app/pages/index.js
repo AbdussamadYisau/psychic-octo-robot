@@ -239,7 +239,7 @@ export default function Home() {
                 <p
                   className={`text-[32px] md:text-[64px] md:font-[700] md:leading-[1.23] text-[#2D2D2D] dark:text-white`}
                 >
-                  {data[0].word}
+                  {data[0]?.word}
                 </p>
                 <p
                   className={`${styles.phonetics} text-[18px] md:text-[24px]  leading-[1.33] font-[400]`}
@@ -252,7 +252,7 @@ export default function Home() {
                 </p>
               </div>
 
-              {data[0].phonetics.filter((word) => word.audio !== "")[0] ? (
+              {data[0].phonetics?.filter((word) => word.audio !== "")[0] ? (
                 <PlayAudio
                   onClick={() => audio.play()}
                   hover={hover}
