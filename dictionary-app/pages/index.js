@@ -54,7 +54,7 @@ export default function Home() {
       return response.data;
     },
     {
-      enabled: word !== "" && submitted !== false,
+      enabled:  submitted !== false,
       onError: (error) => console.log(error),
     }
   );
@@ -99,7 +99,7 @@ export default function Home() {
       setHasError(false);
     }
 
-    setWord(event.target.elements.word.value);
+    // setWord(event.target.elements.word.value);
 
     router.push({ pathname: '/', query: { word: event.target.elements.word.value } })
 
@@ -173,8 +173,8 @@ export default function Home() {
               setIsFocused(false);
             }}
             onKeyDown={() => setHasError(false)}
-            // value={word}
-            // onChange={(e) => setWord(e.target.value)}
+            value={word}
+            onChange={(e) => setWord(e.target.value)}
             name="word"
           />
           <button type="submit">
