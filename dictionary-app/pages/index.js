@@ -23,7 +23,6 @@ export default function Home() {
   // useEffect only runs on the client, so now we can safely show the UI
   useEffect(() => {
     setMounted(true);
-    console.log("Word", router.query.word)
   }, []);
 
   const [word, setWord] = useState("");
@@ -93,14 +92,19 @@ export default function Home() {
     event.preventDefault();
     setSubmitted(true);
 
-    setWord(event.target.elements.word.value);
-
     if (event.target.elements.word.value === "") {
       setHasError(true);
     }
     if (event.target.elements.word.value !== "") {
       setHasError(false);
     }
+
+    setWord(event.target.elements.word.value);
+
+    router.push({ pathname: '/', query: { word: event.target.elements.word.value } })
+
+
+
     setTimeout(() => setSubmitted(false), 500);
   };
 
@@ -243,7 +247,7 @@ export default function Home() {
                   {
                     data[0].phonetics.filter(
                       (word) => word.text !== ("" || undefined)
-                    )[0].text
+                    )[0]?.text
                   }
                 </p>
               </div>
@@ -282,7 +286,7 @@ export default function Home() {
                       </p>
                       <div className={`${styles.partsOfSpeechList}`}>
                         <ul>
-                          {word.definitions
+                          {word?.definitions
                             .slice(0, 3)
                             .map((definition, index) => (
                               <>
@@ -290,11 +294,11 @@ export default function Home() {
                                   key={index}
                                   className={`definition-list text-[15px] md:text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}
                                 >
-                                  {definition.definition}
+                                  {definition?.definition}
                                 </li>
                                 {definition.example ? (
                                   <p className=" mt-[13px] text-[#757575] text-[15px] md:text-[18px] font-[400]">
-                                    "{definition.example}"
+                                    "{definition?.example}"
                                   </p>
                                 ) : null}
                               </>
@@ -311,15 +315,26 @@ export default function Home() {
                           >
                             Synonyms{" "}
                           </p>
+                           
+                      {groupsObject[partOfSpeech].map((word, index) => ( 
 
-                          <p
-                            className={`font-[400] text-[#A445ED] text-[16px] md:text-[20px]`}
-                          >
-                            {" "}
-                            {groupsObject[partOfSpeech]
-                              .map((item) => item.synonyms.join(", "))
-                              .join(", ")}{" "}
-                          </p>
+                            <span key={index}>
+
+                            {word?.synonyms.map((synonym, index) => (
+                              <span key={index} className={`font-[400] text-[#A445ED] text-[16px] md:text-[20px] cursor-pointer`}
+                              onClick={() => {
+                                router.push({ pathname: '/', query: { word: synonym } })
+                              }}
+                              
+                              >
+                                {index === word?.synonyms.length - 1 ? synonym : 
+                                `${synonym} , `
+                                }
+                              </span>
+                            )) }
+
+                            </span>
+                      ))}
                         </div>
                       )}
                     </div>
