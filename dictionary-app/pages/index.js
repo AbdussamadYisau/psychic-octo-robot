@@ -58,7 +58,7 @@ export default function Home() {
     {
       enabled: submitted !== false,
       onError: (error) => console.log(error),
-      retry: false,
+      retry: 1,
     }
   );
 
