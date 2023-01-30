@@ -258,7 +258,7 @@ export default function Home() {
             <div className="loading loadingSpinner3"></div>
           </div>
         )}
-        { error && (
+        { status === "error" && (
           <div className="mt-[8px] flex flex-col items-center">
             <p className="text-[64px] font-[400] mb-[28px]">😕</p>
 
