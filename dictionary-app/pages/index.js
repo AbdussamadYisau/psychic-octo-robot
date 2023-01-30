@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useTheme } from "next-themes";
 import styles from "../styles/Home.module.css";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Logo from "../components/Logo";
 import Moon from "../components/Moon";
 import { useQuery } from "react-query";
@@ -30,32 +30,35 @@ export default function Home() {
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    if(router.query.word){
-        // use react-query useQuery or useMutation here
-        setSubmitted(true);
-        setWord(router.query.word);
+    if (router.query.word) {
+      // use react-query useQuery or useMutation here
+      setSubmitted(true);
+      setWord(router.query.word);
 
-        setTimeout(() => {
-          setSubmitted(false);
-        }, 1000)
-
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 1000);
     }
-  },[router.query.word])
+  }, [router.query.word]);
 
   // hover for play button
   const [hover, setHover] = useState(false);
 
-  const { status, data } = useQuery(
+  const { status, error, data } = useQuery(
     ["dictionary", word],
     async () => {
       const response = await axios.get(
         `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
       );
+      if (response.status >= 400) {
+        throw new Error(response.statusText);
+      }
       return response.data;
     },
     {
-      enabled:  submitted !== false,
+      enabled: submitted !== false,
       onError: (error) => console.log(error),
+      retry: false,
     }
   );
 
@@ -74,12 +77,49 @@ export default function Home() {
         var list = groups[item.partOfSpeech];
 
         if (list) {
+          console.log("Debugging", list, item);
           list.push(item);
+          console.log("Debugging 2", list, item);
         } else {
           groups[item.partOfSpeech] = [item];
         }
       });
 
+      const groupByPartOfSpeech = data[0]?.meanings.reduce((acc, curr) => {
+        const pos = curr.partOfSpeech;
+
+        if (acc[pos]) {
+          acc[pos] = {
+            partOfSpeech: pos,
+            definitions: [...acc[pos].definitions, ...curr.definitions],
+            synonyms: [...acc[pos].synonyms, ...curr.synonyms],
+            antonyms: [...acc[pos].antonyms, ...curr.antonyms]            
+          };
+        } else {
+          acc[pos] = {
+            partOfSpeech: pos,
+            definitions: curr.definitions,
+            synonyms: curr.synonyms,
+            antonyms: curr.antonyms
+          }
+        }
+    
+        // if (acc[pos]) {
+        //   acc[pos] = [{
+        //     partOfSpeech: pos,
+        //     definitions: [...acc[pos].definitions, ...curr.definitions],
+        //     synonyms: [...acc[pos].synonyms, ...curr.synonyms],
+        //     antonyms: [...acc[pos].antonyms, ...curr.antonyms]            
+        //   }];
+        // } else {
+        //   acc[pos] = [curr]
+          
+        // }
+        return acc;
+      }, {});
+
+
+      console.log(groups, groupByPartOfSpeech);
       setGroupsObject(groups);
     }
   }, [data]);
@@ -101,9 +141,10 @@ export default function Home() {
 
     // setWord(event.target.elements.word.value);
 
-    router.push({ pathname: '/', query: { word: event.target.elements.word.value } })
-
-
+    router.push({
+      pathname: "/",
+      query: { word: event.target.elements.word.value },
+    });
 
     setTimeout(() => setSubmitted(false), 500);
   };
@@ -217,18 +258,16 @@ export default function Home() {
             <div className="loading loadingSpinner3"></div>
           </div>
         )}
-        {status === "error" && (
+        { error && (
           <div className="mt-[8px] flex flex-col items-center">
             <p className="text-[64px] font-[400] mb-[28px]">😕</p>
 
             <p className="font-[700] text-[20px] text-[#2D2D2D] dark:text-white ">
-              No Definition Found
+              {error?.response?.data?.title}
             </p>
 
-            <p className="mt-[20px] text-[#757575] md:w-[450px] text-center">
-              Sorry pal, we couldn't find definitions for the word you were
-              looking for. You can try the search again at later time or head to
-              the web instead.
+            <p className="mt-[20px] text-[#757575] md:w-[600px] text-center text-[15px] md:text-[18px]">
+              {`${error?.response?.data?.message} ${error?.response?.data?.resolution}`}
             </p>
           </div>
         )}
@@ -257,17 +296,16 @@ export default function Home() {
                   onClick={() => audio.play()}
                   hover={hover}
                   onMouse
-                  onMouseEnter={() => setHover(true) }
+                  onMouseEnter={() => setHover(true)}
                   onMouseLeave={() => setHover(false)}
-                  
                   className="cursor-pointer"
                 />
               ) : null}
             </div>
 
             <div>
-              {Object.keys(groupsObject).map((partOfSpeech) => (
-                <div className={`${styles.groupSections}`}>
+              {Object.keys(groupsObject).map((partOfSpeech, index) => (
+                <div className={`${styles.groupSections}`} key={index}>
                   <div className={`${styles.partOfSpeechHeader}`}>
                     <p
                       className={`text-[#2D2D2D] dark:text-white  text-[32px] md:text-[24px] font-bold italic`}
@@ -277,13 +315,15 @@ export default function Home() {
                     <div className={`bg-[#E9E9E9] dark:bg-[#3A3A3A]`}></div>
                   </div>
 
+                  <div className={`${styles.partOfSpeechBody}`}>
+                    <p
+                      className={`${styles.partOfSpeechMeaning} text-[18px] md:text-[20px] font-[400]`}
+                    >
+                      Meaning
+                    </p>
+                  </div>
                   {groupsObject[partOfSpeech].map((word, index) => (
                     <div className={`${styles.partOfSpeechBody}`} key={index}>
-                      <p
-                        className={`${styles.partOfSpeechMeaning} text-[18px] md:text-[20px] font-[400]`}
-                      >
-                        Meaning
-                      </p>
                       <div className={`${styles.partsOfSpeechList}`}>
                         <ul>
                           {word?.definitions
@@ -306,37 +346,39 @@ export default function Home() {
                         </ul>
                       </div>
 
-                      {groupsObject[partOfSpeech]
-                        .map((item) => item.synonyms.join(", "))
-                        .join(", ") && (
-                        <div className="flex gap-[20px] items-center">
+                    
+                          {groupsObject[partOfSpeech].map((word, index) => (
+                            <span key={index}>
+                              {word?.synonyms.map((synonym, index) => (
+                                <>
+
+                          <div className="flex gap-[20px] items-center">
                           <p
                             className={`font-[400] text-[#757575] text-[16px] md:text-[20px]`}
                           >
                             Synonyms{" "}
                           </p>
-                           
-                      {groupsObject[partOfSpeech].map((word, index) => ( 
 
-                            <span key={index}>
-
-                            {word?.synonyms.map((synonym, index) => (
-                              <span key={index} className={`font-[400] text-[#A445ED] text-[16px] md:text-[20px] cursor-pointer`}
-                              onClick={() => {
-                                router.push({ pathname: '/', query: { word: synonym } })
-                              }}
-                              
-                              >
-                                {index === word?.synonyms.length - 1 ? synonym : 
-                                `${synonym} , `
-                                }
-                              </span>
-                            )) }
-
+                                <span
+                                  key={index}
+                                  className={`font-[400] text-[#A445ED] text-[16px] md:text-[20px] cursor-pointer`}
+                                  onClick={() => {
+                                    router.push({
+                                      pathname: "/",
+                                      query: { word: synonym },
+                                    });
+                                  }}
+                                >
+                                  {index === word?.synonyms.length - 1
+                                    ? synonym
+                                    : `${synonym} , `}
+                                </span>
+                                </div>
+                                </>
+                              ))}
                             </span>
-                      ))}
-                        </div>
-                      )}
+                          ))}
+                  
                     </div>
                   ))}
                 </div>
