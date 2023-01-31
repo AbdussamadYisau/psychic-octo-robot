@@ -347,7 +347,7 @@ export default function Home() {
                           Synonyms{" "}
                         </p>
 
-                        {value.synonyms.slice(0, 3).map((synonym, index) => (
+                        {[...new Set(value.synonyms)].slice(0, 3).map((synonym, index) => (
                           <span
                             key={index}
                             className={`font-[400] text-[#A445ED] text-[16px] md:text-[20px] cursor-pointer`}
@@ -358,7 +358,7 @@ export default function Home() {
                               });
                             }}
                           >
-                            {index === value?.synonyms.slice(0, 3).length - 1
+                            {index === [...new Set(value.synonyms)].slice(0, 3).length - 1
                               ? synonym
                               : `${synonym} , `}
                           </span>
@@ -374,7 +374,7 @@ export default function Home() {
                           Antonyms{" "}
                         </p>
 
-                        {value.antonyms.slice(0, 3).map((antonym, index) => (
+                        {[...new Set(value.antonyms)].slice(0, 3).map((antonym, index) => (
                           <span
                             key={index}
                             className={`font-[400] text-[#A445ED] text-[16px] md:text-[20px] cursor-pointer`}
@@ -385,7 +385,7 @@ export default function Home() {
                               });
                             }}
                           >
-                            {index === value?.antonyms.slice(0, 3).length - 1
+                            {index === [...new Set(value.antonyms)].slice(0, 3).length - 1
                               ? antonym
                               : `${antonym} , `}
                           </span>
