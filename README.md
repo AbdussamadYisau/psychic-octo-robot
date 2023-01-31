@@ -6,4 +6,4 @@
 
 1. Product-Preview Component [view here](https://abdussamadyisau.github.io/psychic-octo-robot/product-preview/) .
 
-2. Dictionary Web App [view here](https://psychic-octo-robot.vercel.app)
+2. Dictionary Web App [view here](https://dictionary.abdussamadyisau.com)
