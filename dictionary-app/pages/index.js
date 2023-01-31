@@ -77,9 +77,7 @@ export default function Home() {
         var list = groups[item.partOfSpeech];
 
         if (list) {
-          console.log("Debugging", list, item);
           list.push(item);
-          console.log("Debugging 2", list, item);
         } else {
           groups[item.partOfSpeech] = [item];
         }
@@ -93,34 +91,34 @@ export default function Home() {
             partOfSpeech: pos,
             definitions: [...acc[pos].definitions, ...curr.definitions],
             synonyms: [...acc[pos].synonyms, ...curr.synonyms],
-            antonyms: [...acc[pos].antonyms, ...curr.antonyms]            
+            antonyms: [...acc[pos].antonyms, ...curr.antonyms],
           };
         } else {
           acc[pos] = {
             partOfSpeech: pos,
             definitions: curr.definitions,
             synonyms: curr.synonyms,
-            antonyms: curr.antonyms
-          }
+            antonyms: curr.antonyms,
+          };
         }
-    
+
         // if (acc[pos]) {
         //   acc[pos] = [{
         //     partOfSpeech: pos,
         //     definitions: [...acc[pos].definitions, ...curr.definitions],
         //     synonyms: [...acc[pos].synonyms, ...curr.synonyms],
-        //     antonyms: [...acc[pos].antonyms, ...curr.antonyms]            
+        //     antonyms: [...acc[pos].antonyms, ...curr.antonyms]
         //   }];
         // } else {
         //   acc[pos] = [curr]
-          
+
         // }
         return acc;
       }, {});
 
-
       console.log(groups, groupByPartOfSpeech);
-      setGroupsObject(groups);
+      // setGroupsObject(groups);
+      setGroupsObject(groupByPartOfSpeech);
     }
   }, [data]);
 
@@ -258,7 +256,7 @@ export default function Home() {
             <div className="loading loadingSpinner3"></div>
           </div>
         )}
-        { status === "error" && (
+        {status === "error" && (
           <div className="mt-[8px] flex flex-col items-center">
             <p className="text-[64px] font-[400] mb-[28px]">😕</p>
 
@@ -304,13 +302,13 @@ export default function Home() {
             </div>
 
             <div>
-              {Object.keys(groupsObject).map((partOfSpeech, index) => (
-                <div className={`${styles.groupSections}`} key={index}>
+              {Object.entries(groupsObject).map(([key, value]) => (
+                <div className={`${styles.groupSections}`} key={key}>
                   <div className={`${styles.partOfSpeechHeader}`}>
                     <p
                       className={`text-[#2D2D2D] dark:text-white  text-[32px] md:text-[24px] font-bold italic`}
                     >
-                      {partOfSpeech}
+                      {key}
                     </p>
                     <div className={`bg-[#E9E9E9] dark:bg-[#3A3A3A]`}></div>
                   </div>
@@ -321,66 +319,80 @@ export default function Home() {
                     >
                       Meaning
                     </p>
-                  </div>
-                  {groupsObject[partOfSpeech].map((word, index) => (
-                    <div className={`${styles.partOfSpeechBody}`} key={index}>
-                      <div className={`${styles.partsOfSpeechList}`}>
-                        <ul>
-                          {word?.definitions
-                            .slice(0, 3)
-                            .map((definition, index) => (
-                              <>
-                                <li
-                                  key={index}
-                                  className={`definition-list text-[15px] md:text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}
-                                >
-                                  {definition?.definition}
-                                </li>
-                                {definition.example ? (
-                                  <p className=" mt-[13px] text-[#757575] text-[15px] md:text-[18px] font-[400]">
-                                    "{definition?.example}"
-                                  </p>
-                                ) : null}
-                              </>
-                            ))}
-                        </ul>
-                      </div>
 
-                    
-                          {groupsObject[partOfSpeech].map((word, index) => (
-                            <span key={index}>
-                              {word?.synonyms.map((synonym, index) => (
-                                <>
-
-                          <div className="flex gap-[20px] items-center">
-                          <p
-                            className={`font-[400] text-[#757575] text-[16px] md:text-[20px]`}
-                          >
-                            Synonyms{" "}
-                          </p>
-
-                                <span
-                                  key={index}
-                                  className={`font-[400] text-[#A445ED] text-[16px] md:text-[20px] cursor-pointer`}
-                                  onClick={() => {
-                                    router.push({
-                                      pathname: "/",
-                                      query: { word: synonym },
-                                    });
-                                  }}
-                                >
-                                  {index === word?.synonyms.length - 1
-                                    ? synonym
-                                    : `${synonym} , `}
-                                </span>
-                                </div>
-                                </>
-                              ))}
-                            </span>
-                          ))}
-                  
+                    <div className={`${styles.partsOfSpeechList}`}>
+                      <ul>
+                        {value.definitions.slice(0, 3).map((def, i) => (
+                          <>
+                            <li
+                              key={i}
+                              className={`definition-list text-[15px] md:text-[18px] font-[400] leading-[1.3] text-[#2D2D2D] dark:text-white`}
+                            >
+                              {def.definition}
+                            </li>
+                            {def.example ? (
+                              <p className=" mt-[13px] text-[#757575] text-[15px] md:text-[18px] font-[400]">
+                                "{def?.example}"
+                              </p>
+                            ) : null}
+                          </>
+                        ))}
+                      </ul>
                     </div>
-                  ))}
+                    {value.synonyms.length > 0 ? (
+                      <div className="flex gap-[20px] items-center">
+                        <p
+                          className={`font-[400] text-[#757575] text-[16px] md:text-[20px]`}
+                        >
+                          Synonyms{" "}
+                        </p>
+
+                        {value.synonyms.slice(0, 3).map((synonym, index) => (
+                          <span
+                            key={index}
+                            className={`font-[400] text-[#A445ED] text-[16px] md:text-[20px] cursor-pointer`}
+                            onClick={() => {
+                              router.push({
+                                pathname: "/",
+                                query: { word: synonym },
+                              });
+                            }}
+                          >
+                            {index === value?.synonyms.slice(0, 3).length - 1
+                              ? synonym
+                              : `${synonym} , `}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+
+                    {value.antonyms.length > 0 ? (
+                      <div className="flex gap-[20px] items-center">
+                        <p
+                          className={`font-[400] text-[#757575] text-[16px] md:text-[20px]`}
+                        >
+                          Antonyms{" "}
+                        </p>
+
+                        {value.antonyms.slice(0, 3).map((antonym, index) => (
+                          <span
+                            key={index}
+                            className={`font-[400] text-[#A445ED] text-[16px] md:text-[20px] cursor-pointer`}
+                            onClick={() => {
+                              router.push({
+                                pathname: "/",
+                                query: { word: antonym },
+                              });
+                            }}
+                          >
+                            {index === value?.antonyms.slice(0, 3).length - 1
+                              ? antonym
+                              : `${antonym} , `}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
               ))}
             </div>
@@ -401,11 +413,11 @@ export default function Home() {
 
                 <div className={`${styles.externalLinkDiv}`}>
                   <a
-                    href={data[0].sourceUrls}
+                    href={`https://en.wiktionary.org/wiki/${word}`}
                     target="_blank"
                     className={`block text-[14px] text-[#2D2D2D] dark:text-white font-[400] underline underline-offset-[4px] decoration-[#E9E9E9] dark:decoration-[#3A3A3A]`}
                   >
-                    {data[0].sourceUrls}
+                    {`https://en.wiktionary.org/wiki/${word}`}
                   </a>
 
                   <ExternalLink />
